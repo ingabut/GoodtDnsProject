@@ -1,0 +1,49 @@
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "io.qameta.allure.gradle.report:allure-report-plugin:2.11.2"
+  }
+}
+
+plugins {
+    id 'java'
+    id "io.qameta.allure" version "2.11.2"
+    id "io.qameta.allure-report" version "2.11.2"
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.9.1'
+    testImplementation group: 'org.testng', name: 'testng', version: '7.7.1'
+    testImplementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.7'
+    implementation group: 'io.qameta.allure', name: 'allure-testng', version: '2.22.0'
+}
+
+test {
+    useTestNG()
+}
+
+allure {
+    version = '2.21.0'
+    autoconfigure = true
+    aspectjweaver = true
+}
+tasks.withType(Test) {
+    systemProperty "file.encoding", "UTF-8"
+}
+task main_tests(type: Test) {
+    ignoreFailures = true
+    useTestNG() {
+        options.suites 'src/test/resources/main_tests.xml'
+    }
+}
